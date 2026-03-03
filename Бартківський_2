@@ -99,7 +99,6 @@ class Program
             QuickSortDesc(A, q + 1, r);
         }
     }
-
     static int PartitionDesc(int[] A, int p, int r)
     {
         int pivot = A[r];
