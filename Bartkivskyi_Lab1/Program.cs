@@ -1,0 +1,313 @@
+﻿using System;
+using System.Diagnostics;
+using System.Text;
+using static System.Collections.Specialized.BitVector32;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace ASD_Lab1  
+{
+    public static class Program
+    {
+        private static int[] arr;
+        private static int size;
+        public static void Main(string[] args)
+        {
+            Console.InputEncoding = Encoding.UTF8;
+            Console.OutputEncoding = Encoding.UTF8;
+
+            Console.WriteLine("Бартківський Юрій Вадимович, гр. ІПЗ-11(2)");
+
+            Console.WriteLine("Виберіть: 1 - Згенерувати випадкові значення масиву, 2 - Увести значення самостійно: ");
+            int option = int.Parse(Console.ReadLine());
+            Console.WriteLine();
+
+            switch (option)
+            {
+                case 1:
+                    Console.WriteLine("Уведіть розмір масиву: ");
+                    size = int.Parse(Console.ReadLine());
+                    if (size <= 0)
+                    {
+                        Console.WriteLine("Створення масиву з нульовою або від'ємною кількість елементів.");
+                        return;
+                    }
+                    Program.RandomOption(size);
+                    break;
+                case 2:
+                    Console.WriteLine("Уведіть розмір масиву: ");
+                    size = int.Parse(Console.ReadLine());
+                    if (size <= 0)
+                    {
+                        Console.WriteLine("Створення масиву з нульовою або від'ємною кількість елементів.");
+                        return;
+                    }
+                    Program.WriteOption(size);
+                    break;
+                default:
+                    Console.WriteLine("Будь ласка, уводьте значення 1 або 2.");
+                    return;
+            }
+            
+            int choice;
+            int searchKey;
+
+            do
+            {
+                Console.WriteLine("\n========== МЕНЮ ==========");
+                Console.WriteLine("1 - Лінійний пошук");
+                Console.WriteLine("2 - Лінійний пошук з бар'єром");
+                Console.WriteLine("3 - Бінарний пошук (Масив відсортується)");
+                Console.WriteLine("4 - Золотий переріз (Масив відсортується)");
+                Console.WriteLine("0 - Вихід");
+                Console.WriteLine("Оберіть завдання програми: ");
+
+                try
+                {
+                    choice = Convert.ToByte(Console.ReadLine());
+                }
+                catch
+                {
+                    choice = 255;
+                }
+                switch (choice)
+                {
+                    case 1:
+                        Console.WriteLine("\nУведіть число яке хочете знайти: ");
+                        searchKey = int.Parse(Console.ReadLine());
+                        Program.LinearSearch(searchKey);
+                        break;
+                    case 2:
+                        Console.WriteLine("\nУведіть число яке хочете знайти: ");
+                        searchKey = int.Parse(Console.ReadLine());
+                        List<int> foundIndices = SentinelSearch(searchKey);
+                        if (foundIndices.Count > 0)
+                        {
+                            Console.WriteLine($"Число {searchKey} знайдено на позиціях: " + string.Join(", ", foundIndices));
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Число {searchKey} не знайдено.");
+                        }
+                        break;
+                    case 3:
+                        Program.BubbleSort(size);
+                        Console.WriteLine("\nУведіть число яке хочете знайти: ");
+                        searchKey = int.Parse(Console.ReadLine());
+                        Program.BinarySearch(searchKey);
+                        break;
+                    case 4:
+                        Program.BubbleSort(size);
+                        Console.WriteLine("\nУведіть число яке хочете знайти: ");
+                        searchKey = int.Parse(Console.ReadLine());
+                        Program.GoldenSectionSearch(searchKey);
+                        break;
+                }
+            } while (choice != 0);
+        }
+        private static void RandomOption(int n)
+        {
+            Random rand = new Random();
+            arr = new int[n];
+            for (int i = 0; i < n; i++)
+                arr[i] = rand.Next(0, n * 2);
+            Console.WriteLine();
+            Console.WriteLine("Згенерований масив: " + string.Join(", ", arr));
+        }
+        private static void WriteOption(int n)
+        {
+            arr = new int[n];
+            for (int i = 0; i < n; i++)
+            {
+                Console.WriteLine();
+                Console.WriteLine($"Уведіть Значення елементу з індексом {i}:");
+                arr[i] = int.Parse(Console.ReadLine());
+            }
+            Console.WriteLine();
+            Console.WriteLine("Згенерований масив: " + string.Join(", ", arr));
+        }
+        private static void LinearSearch(int key)
+        {
+            string resultIndexes = "";
+
+            for (int i = 0; i < arr.Length; i++)
+            {
+                if (arr[i] == key)
+                {
+                    resultIndexes += i + ", ";
+                }
+            }
+
+            if (resultIndexes == "")
+            {
+                Console.WriteLine($"Числа {key} в масиві немає.");
+            }
+            else
+            {
+                resultIndexes = resultIndexes.TrimEnd(',', ' ');
+
+                Console.WriteLine();
+                Console.WriteLine($"Число {key} знайдено на позиціях: {resultIndexes}");
+            }
+        }
+        private static List<int> SentinelSearch(int target)
+        {
+            List<int> results = new List<int>();
+            int n = arr.Length;
+            if (n == 0) return results;
+
+            int lastElement = arr[n - 1];
+
+            arr[n - 1] = target;
+
+            int i = 0;
+
+            while (true)
+            {
+                while (arr[i] != target)
+                {
+                    i++;
+                }
+
+                if (i == n - 1)
+                {
+                    break;
+                }
+
+                results.Add(i);
+                i++;
+            }
+
+            arr[n - 1] = lastElement;
+
+            if (lastElement == target)
+            {
+                results.Add(n - 1);
+            }
+
+            return results;
+        }
+        private static void BubbleSort(int n)
+        {
+            for (int i = 0; i < n - 1; i++)
+            {
+                for (int j = 0; j < n - 1 - i; j++)
+                {
+                    if (arr[j] > arr[j + 1])
+                    {
+                        int temp = arr[j];
+                        arr[j] = arr[j + 1];
+                        arr[j + 1] = temp;
+                    }
+                }
+            }
+            Console.WriteLine("Відсортований масив: " + string.Join(", ", arr));
+        }
+        private static void BinarySearch(int key)
+        {
+            string resultIndexes = "";
+            int left = 0;
+            int right = arr.Length - 1;
+            bool found = false;
+
+            while (left <= right)
+            {
+                int mid = left + ((right - left) / 2);
+
+                if (arr[mid] == key)
+                {
+                    int start = mid;
+                    while (start > 0 && arr[start - 1] == key)
+                    {
+                        start--;
+                    }
+
+                    int end = mid;
+                    while (end < arr.Length - 1 && arr[end + 1] == key)
+                    {
+                        end++;
+                    }
+
+                    for (int i = start; i <= end; i++)
+                    {
+                        resultIndexes += i + ", ";
+                    }
+
+                    found = true;
+                    break;
+                }
+                else if (arr[mid] < key)
+                {
+                    left = mid + 1;
+                }
+                else
+                {
+                    right = mid - 1;
+                }
+            }
+
+            if (!found)
+            {
+                Console.WriteLine($"Числа {key} в масиві немає.");
+            }
+            else
+            {
+                resultIndexes = resultIndexes.TrimEnd(',', ' ');
+                Console.WriteLine($"Число {key} знайдено на позиціях: {resultIndexes}");
+            }
+        }
+        private static void GoldenSectionSearch(int key)
+        {
+            string resultIndexes = "";
+            int left = 0;
+            int right = arr.Length - 1;
+            bool found = false;
+
+            while (left <= right)
+            {
+                double phi = 0.6180339887;
+                int m = left + (int)((right - left) * phi);
+
+                if (arr[m] == key)
+                {
+                    int start = m;
+                    while (start > 0 && arr[start - 1] == key)
+                    {
+                        start--;
+                    }
+
+                    int end = m;
+                    while (end < arr.Length - 1 && arr[end + 1] == key)
+                    {
+                        end++;
+                    }
+
+                    for (int i = start; i <= end; i++)
+                    {
+                        resultIndexes += i + ", ";
+                    }
+
+                    found = true;
+                    break;
+                }
+                else if (arr[m] < key)
+                {
+                    left = m + 1;
+                }
+                else
+                {
+                    right = m - 1;
+                }
+            }
+
+            if (!found)
+            {
+                Console.WriteLine($"Числа {key} в масиві немає.");
+            }
+            else
+            {
+                resultIndexes = resultIndexes.TrimEnd(',', ' ');
+                Console.WriteLine($"Число {key} знайдено на позиціях: {resultIndexes}");
+            }
+        }
+    }
+}
