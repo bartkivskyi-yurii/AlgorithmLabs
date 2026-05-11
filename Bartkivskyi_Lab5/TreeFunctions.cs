@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,6 +15,7 @@ namespace Bartkivskyi_Lab5_ASD
                 PreOrder(root.Right);
             }
         }
+
         public void PostOrder(Node root)
         {
             if (root != null)
@@ -24,6 +25,7 @@ namespace Bartkivskyi_Lab5_ASD
                 Console.Write(root.Key + " ");
             }
         }
+
         public void InOrderIterative(Node root)
         {
             Stack<Node> stack = new Stack<Node>();
@@ -43,6 +45,7 @@ namespace Bartkivskyi_Lab5_ASD
                 current = current.Right;
             }
         }
+
         public Node TreeMinimum(Node node)
         {
             if (node == null) return null;
@@ -50,6 +53,7 @@ namespace Bartkivskyi_Lab5_ASD
 
             return TreeMinimum(node.Left);
         }
+
         public Node TreeMaximum(Node node)
         {
             if (node == null) return null;
@@ -57,6 +61,7 @@ namespace Bartkivskyi_Lab5_ASD
 
             return TreeMaximum(node.Right);
         }
+
         public Node TreePredecessor(Node node)
         {
             if (node == null) return null;
@@ -75,6 +80,7 @@ namespace Bartkivskyi_Lab5_ASD
 
             return parent;
         }
+
         public Node TreeInsert(Node root, int key, Node parent = null)
         {
             if (root == null)
