@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
 using System.Text;
@@ -22,6 +22,7 @@ namespace Bartkivskyi_Lab5_ASD
 
             return root;
         }
+
         public Node BuildTreeHeight3()
         {
             Node root = new Node(5);
@@ -38,6 +39,7 @@ namespace Bartkivskyi_Lab5_ASD
 
             return root;
         }
+
         public Node BuildTreeHeight4()
         {
             Node root = new Node(4);
@@ -54,6 +56,7 @@ namespace Bartkivskyi_Lab5_ASD
 
             return root;
         }
+
         public Node BuildTreeHeight5()
         {
             Node root = new Node(4);
@@ -71,6 +74,7 @@ namespace Bartkivskyi_Lab5_ASD
 
             return root;
         }
+
         public Node BuildTreeHeight6()
         {
             Node root = new Node(1);
